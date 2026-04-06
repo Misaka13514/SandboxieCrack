@@ -15,6 +15,9 @@
 #include <Shlobj.h>
 #include <atlbase.h>    // CComPtr - ensures Release() on every exit path
 
+#pragma comment(lib, "Iphlpapi.lib")
+#pragma comment(lib, "Ws2_32.lib")
+
 
 QVariantMap ResolveShortcut(const QString& LinkPath)
 {
