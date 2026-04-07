@@ -4693,7 +4693,7 @@ void CSandMan::OnAbout()
 
 		QString CertInfo;
 
-		CertInfo = tr("This copy of Sandboxie-Plus is certified for: %1").arg("Misaka13514");
+		CertInfo = tr("This copy of Sandboxie-Plus is certified for: %1").arg("Diz");
 
 		QString SbiePath = theAPI->GetSbiePath();
 
