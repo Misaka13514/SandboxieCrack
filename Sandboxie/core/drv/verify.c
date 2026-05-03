@@ -282,7 +282,7 @@ NTSTATUS KphVerifyFile(
 CleanupExit:
     if (hash)
         ExFreePoolWithTag(hash, 'vhpK');
- 
+
     return TRUE;
 }
 
@@ -319,13 +319,13 @@ CleanupExit:
 
     if (hash)
         ExFreePoolWithTag(hash, 'vhpK');
- 
+
     MyFreeHash(&hashObj);
 
     return status;
 }
 
-NTSTATUS KphReadSignature(    
+NTSTATUS KphReadSignature(
     _In_ PUNICODE_STRING FileName,
     _Out_ PUCHAR *Signature,
     _Out_ ULONG *SignatureSize
@@ -374,7 +374,7 @@ NTSTATUS KphReadSignature(
         goto CleanupExit;
     }
 
-    if (!NT_SUCCESS(status = ZwReadFile(fileHandle, NULL, NULL, NULL, &iosb, *Signature, *SignatureSize, 
+    if (!NT_SUCCESS(status = ZwReadFile(fileHandle, NULL, NULL, NULL, &iosb, *Signature, *SignatureSize,
         NULL, NULL)))
     {
         goto CleanupExit;
@@ -383,7 +383,7 @@ NTSTATUS KphReadSignature(
 CleanupExit:
     if (fileHandle)
         ZwClose(fileHandle);
-    
+
     return TRUE;
 }
 
@@ -395,14 +395,14 @@ NTSTATUS KphVerifyCurrentProcess()
     ULONG signatureSize = 0;
     PUCHAR signature = NULL;
 	return TRUE;
-    
+
     if (!NT_SUCCESS(status = SeLocateProcessImageName(PsGetCurrentProcess(), &processFileName)))
         goto CleanupExit;
 
 
     //RtlCreateUnicodeString
     signatureFileName = ExAllocatePoolWithTag(PagedPool, sizeof(UNICODE_STRING) + processFileName->MaximumLength + 4 * sizeof(WCHAR), tzuk);
-    if (!signatureFileName) 
+    if (!signatureFileName)
     {
         status = STATUS_INSUFFICIENT_RESOURCES;
         goto CleanupExit;
@@ -422,7 +422,7 @@ NTSTATUS KphVerifyCurrentProcess()
     if (!NT_SUCCESS(status = KphReadSignature(signatureFileName, &signature, &signatureSize)))
         goto CleanupExit;
 
-    status = KphVerifyFile(processFileName, signature, signatureSize); 
+    status = KphVerifyFile(processFileName, signature, signatureSize);
 
 
 CleanupExit:
@@ -625,13 +625,14 @@ _FX NTSTATUS KphValidateCertificate()
         if (CertDbg) DbgPrint("Sbie Build date: %02d.%02d.%d\n", timeFiled.Day, timeFiled.Month, timeFiled.Year);
     }
 
-    LARGE_INTEGER SystemTime;
-    LARGE_INTEGER LocalTime;
-    KeQuerySystemTime(&SystemTime);
-    ExSystemTimeToLocalTime(&SystemTime, &LocalTime);
+    LARGE_INTEGER UtcTime;
+    //LARGE_INTEGER LocalTime;
+    KeQuerySystemTime(&UtcTime);
+    //ExSystemTimeToLocalTime(&UtcTime, &LocalTime);
     if (CertDbg) {
-        RtlTimeToTimeFields(&LocalTime, &timeFiled);
-        DbgPrint("Sbie Current time: %02d:%02d:%02d %02d.%02d.%d\n"
+        //RtlTimeToTimeFields(&LocalTime, &timeFiled);
+        RtlTimeToTimeFields(&UtcTime, &timeFiled);
+        DbgPrint("Sbie Current UTC time: %02d:%02d:%02d %02d.%02d.%d\n"
             , timeFiled.Hour, timeFiled.Minute, timeFiled.Second, timeFiled.Day, timeFiled.Month, timeFiled.Year);
     }
 
@@ -649,7 +650,7 @@ CleanupExit:
     if(CertDbg)     DbgPrint("Sbie Cert status: %08x; active: %d\n", status, Verify_CertInfo.active);
 
 
-    if(path)        Mem_Free(path, path_len);    
+    if(path)        Mem_Free(path, path_len);
     if(line)        Mem_Free(line, line_size);
     if(temp)        Mem_Free(temp, line_size);
 
@@ -692,7 +693,7 @@ typedef struct _RawSMBIOSData {
   UCHAR  SMBIOSTableData[1];
 } RawSMBIOSData;
 
-#define SystemFirmwareTableInformation 76 
+#define SystemFirmwareTableInformation 76
 
 BOOLEAN GetFwUuid(unsigned char* uuid)
 {
@@ -719,7 +720,7 @@ BOOLEAN GetFwUuid(unsigned char* uuid)
     pSfti->TableBufferLength = BufferSize;
 
     status = ZwQuerySystemInformation(SystemFirmwareTableInformation, pSfti, Length, &Length);
-    if (NT_SUCCESS(status)) 
+    if (NT_SUCCESS(status))
     {
         RawSMBIOSData* smb = (RawSMBIOSData*)pSfti->TableBuffer;
 
@@ -816,6 +817,6 @@ void InitFwUuid()
     }
     else // fallback to null guid on error
         wcscpy(g_uuid_str, L"00000000-0000-0000-0000-000000000000");
-    
+
     DbgPrint("sbie FW-UUID: %S\n", g_uuid_str);
 }

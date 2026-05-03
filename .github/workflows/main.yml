@@ -89,6 +89,8 @@ jobs:
   Build_x64_Qt6:
     runs-on: windows-2022
     timeout-minutes: 45
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout code
@@ -182,7 +184,7 @@ jobs:
 
       - name: Upload installer assets
         #if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
-        uses: actions/upload-artifact@v7.0.0
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: Assets
           path: |
@@ -191,7 +193,7 @@ jobs:
 
       - name: Upload Sandboxie x64
         #if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
-        uses: actions/upload-artifact@v7.0.0
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: Sandboxie_x64
           path: |
@@ -204,6 +206,8 @@ jobs:
   Build_ARM64_Qt6:
     runs-on: windows-2022
     timeout-minutes: 45
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout code
@@ -302,7 +306,7 @@ jobs:
 
       - name: Upload Sandboxie ARM64
         #if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
-        uses: actions/upload-artifact@v7.0.0
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: Sandboxie_ARM64
           path: |

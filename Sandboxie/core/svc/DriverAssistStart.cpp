@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2020 Sandboxie Holdings, LLC 
+ * Copyright 2004-2020 Sandboxie Holdings, LLC
  * Copyright 2020 David Xanatos, xanasoft.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -221,7 +221,7 @@ driver_started:
 
         //
         // Sandboxie on ARM64 requires x86 applications NOT to use the CHPE binaries.
-        // 
+        //
         // So when ever the service starts it uses the global xtajit config to disable the use of CHPE binaries,
         // for x86 processes and restores the original value on service shutdown.
         //
@@ -264,7 +264,7 @@ driver_started:
         m_instance->m_DriverReady = true;
 
         //
-        // check if there are boxes configured to be run in bSession0 
+        // check if there are boxes configured to be run in bSession0
         // at system boot and run them on service start
         //
 
